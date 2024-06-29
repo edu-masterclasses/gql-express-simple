@@ -1,14 +1,43 @@
-'use strict'
+import express from 'express';
+import { ApolloServer } from 'apollo-server-express';
+import { makeExecutableSchema } from '@graphql-tools/schema';
+import { gql } from 'apollo-server-express';
 
-import bodyParser from "body-parser";
-import cors from "cors";
-import express from "express";
+// Define your type definitions (schema)
+const typeDefs = gql`
+  type Query {
+    hello: String
+  }
+`;
 
-const port = 3000;
+// Define your resolvers
+const resolvers = {
+  Query: {
+    hello: () => 'Hello world!',
+  },
+};
 
-const app = express();
+// Create the executable schema
+const schema = makeExecutableSchema({ typeDefs, resolvers });
 
-app.use(bodyParser.json(), cors());
+// Initialize the Apollo Server
+async function startApolloServer() {
+  const server = new ApolloServer({ schema });
 
-app.listen(port, () => console.log(`Server run at port ${port}`));
+  // Initialize the Express application
+  const app = express();
 
+  // Start the Apollo server
+  await server.start();
+
+  // Apply the Apollo GraphQL middleware to the Express application
+  server.applyMiddleware({ app, path: '/graphql' });
+
+  // Start the Express server
+  app.listen({ port: 4000 }, () =>
+    console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
+  );
+}
+
+// Start the server
+startApolloServer();
