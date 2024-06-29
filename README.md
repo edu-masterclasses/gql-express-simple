@@ -1,1 +1,1 @@
-# simple-gql
+# gql-express-simple
