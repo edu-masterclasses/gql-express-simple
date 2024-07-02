@@ -14,8 +14,4 @@ const getObjFromJSONFile = (fileName) => {
   return JSON.parse(txtJSON);
 }
 
-const getContent = (obj, key) => {
-  return obj[key];
-}
-
-export { readTxtFile , getObjFromJSONFile, getContent};
+export { readTxtFile , getObjFromJSONFile};
